@@ -1,0 +1,14 @@
+        _______  
+       /\______\ 
+      / /      / 
+     / / Cuby /   Geometry optimization
+     \/______/   
+                 
+Molecular charge 0 read from file input.sdf
+Mopac_setpi_from_file read 6 double bonds
+No. of bonds matching the mopac_setpi patterns: 6
+.................................o...oo..OOOoOoO.oO*
+Status: converged in 53 steps
+Energy: -59.678580 kcal/mol
+
+

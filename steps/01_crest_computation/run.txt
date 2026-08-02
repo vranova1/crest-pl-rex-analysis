@@ -1,0 +1,117 @@
+#!/bin/bash
+set -euox pipefail
+source ../../config.sh
+
+# It is needed to set TRUE to the block to be executed (i. e. first crest run), wait for it to finish and set all false except the next block (i. e. first xtb optimization)
+
+source $CONDA
+# conda activate crest-clean
+conda activate ~/xtb
+# take an input directory from there, LIGAND_BATCH, BATCH_RESULTS
+
+for ligand in $LIGAND_BATCH/*; do
+        input_dir=$ligand
+        name=$(basename $ligand .xyz)
+        #if [[ ! "$name" == "001-CA2__5NY6" ]]; then
+        #       echo "Skipping $name..."
+        #       continue
+        #fi
+        output_dir=$BATCH_RESULTS/$name
+        mkdir -p $output_dir
+        charge=$(awk '/<charge>/{getline; print; exit}' $DATA/pl_rex/$name.sdf| tr -d '[:space:]')
+        charge=${charge:-0}
+        charge=0
+
+        if true; then
+        if [[ -d $output_dir/crest1 ]]; then
+                rm -r $output_dir/crest1
+        fi
+        mkdir $output_dir/crest1
+
+
+        # first crest run
+        cd $output_dir/crest1
+        sbatch --ntasks=1\
+                --job-name="$name" \
+                --cpus-per-task=32 \
+                --time=5:00:00 \
+                --mem=20G \
+                --constraint=gen-d \
+                --mail-type=FAIL \
+                --mail-user=vranova@uochb.cas.cz \
+                --wrap="export OPENBLAS_NUM_THREADS=1; export OMP_NUM_THREADS=32; crest $ligand $METHOD -T 32 --alpb h2o --chrg $charge > $output_dir/crest1/${name}_log.txt"
+        sleep 5
+        fi
+
+        # xtb vtight optimization
+        # sbatch xtb_opt.sh $output_dir/crest.best.xyz $output_dir/xtb_opt
+        # generating topology file first only if gfnff
+        # xtb $output_dir/crest1/crest_best.xyz $METHOD --alpb h2o --chrg $charge > $output_dir/xtb_opt/${name}_log.txt \
+        if [[ ! -f $output_dir/crest1/crest_best.xyz ]]; then
+                echo "Previous CREST run didnt finish as planned. "
+        fi
+
+        if false; then
+        if [[ -d $output_dir/xtb_opt ]]; then
+                rm -rf $output_dir/xtb_opt
+        fi
+
+        mkdir $output_dir/xtb_opt
+        cd $output_dir/xtb_opt
+        sbatch --ntasks=1\
+                --job-name="$name" \
+                --cpus-per-task=1 \
+                --time=01:00:00 \
+                --mem=10G \
+                --constraint=gen-d \
+                --mail-type=FAIL \
+                --mail-user=vranova@uochb.cas.cz \
+                --wrap="export OPENBLAS_NUM_THREADS=1; export OMP_NUM_THREADS=1; xtb $output_dir/crest1/crest_best.xyz --opt vtight --cycles 500 $METHOD --alpb h2o --chrg $charge > $output_dir/xtb_opt/${name}_log.txt"
+        sleep 2
+        fi
+
+        if false; then
+        # crest entropy run
+        # sbatch crest_entropy_ligand.sh $METHOD $output_dir/xtb_opt/xtbopt.xyz $output_dir/
+        if [[ -d $output_dir/crest2 ]]; then
+                rm -r $output_dir/crest2
+                # echo "Not deleting for restart"
+        fi
+        mkdir $output_dir/crest2
+
+
+        # second crest run
+        cd $output_dir/crest2
+        sbatch --ntasks=1\
+                --job-name="$name" \
+                --cpus-per-task=32 \
+                --time=12:00:00 \
+                --mem=20G \
+                --constraint=gen-d \
+                --mail-type=END,FAIL \
+                --mail-user=vranova@uochb.cas.cz \
+                --wrap="export OPENBLAS_NUM_THREADS=1; export OMP_NUM_THREADS=32; crest $output_dir/xtb_opt/xtbopt.xyz --entropy $METHOD  -T 32 --alpb h2o --chrg $charge > $output_dir/crest2/${name}_log.txt"
+        sleep 5
+        fi
+
+        # xtb vtight optimization 2
+        if false; then
+        if [[ -d $output_dir/xtb_opt2 ]]; then
+                rm -rf $output_dir/xtb_opt2
+        fi
+
+        mkdir $output_dir/xtb_opt2
+        cd $output_dir/xtb_opt2
+        sbatch --ntasks=1\
+                --job-name="$name" \
+                --cpus-per-task=1 \
+                --time=01:00:00 \
+                --mem=10G \
+                --constraint=gen-d \
+                --mail-type=FAIL \
+                --mail-user=vranova@uochb.cas.cz \
+                --wrap="export OPENBLAS_NUM_THREADS=1; export OMP_NUM_THREADS=1; xtb $output_dir/crest2/crest_best.xyz --opt vtight --cycles 500 $METHOD --alpb h2o --chrg $charge > $output_dir/xtb_opt2/${name}_log.txt"
+
+        sleep 2
+        fi
+done

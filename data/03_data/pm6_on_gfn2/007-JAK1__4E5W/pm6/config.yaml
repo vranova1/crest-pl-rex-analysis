@@ -1,0 +1,65 @@
+geometry: input.sdf
+charge_from_file: input.sdf
+
+job: optimize
+optimizer: lbfgs
+opt_quality: 0.5
+maxcycles: 500
+optimize_print: steps_as_dots, final_energy
+history_freq: 0
+
+interface: mopac
+mopac_exe: /home/vranova/programs/mopac
+mopac_custom_exe: no
+method: pm6
+mopac_mozyme: yes
+modifiers: dispersion3, h_bonds4, x_bond, forcefield
+mopac_relscf: 0.1
+mopac_damp_scf: 0.5
+modifier_dispersion3:
+  d3_hh_fix_version: 2
+# H-bonds correction: no scaling for charged groups
+modifier_h_bonds4:
+  h_bonds4_scale_charged: no
+  h_bonds4_extra_scaling: {}
+  h_bonds4_pt_corr: 18
+  # New parameters
+  h_bonds4_parameters:
+    multiplier_wh_o: 0.4090
+    oh_o: 1.8934
+    oh_n: 3.2864
+    nh_o: 0.4462
+    nh_n: 1.6095
+    # The rest are default values
+    multiplier_coo: 1.41
+    multiplier_nh4: 3.61
+modifier_x_bond:
+  xbond_parameters:
+    :Cl:
+      :N: [990079.0, -6.915]
+      :O: [100891.0, -5.217]
+      :S: [516740.0, -4.537]
+    :Br:
+      :N: [23215.0, -2.792]
+      :O: [1485982.0, -5.131]
+      :S: [131621890.0, -6.471]
+    :I:
+      :N: [13473085.0, -5.594]
+      :O: [1484563.0, -4.738]
+
+
+# Repulsive correction for S-O and S-N contacts
+modifier_forcefield:
+   forcefield_nonbonded:
+      - {atomtype1: "^S:", atomtype2: "^N:", equation: "4.8596e6 * Math::exp(-5.1861 * r)", derivative: "-5.1861 * 4.8596e6 * Math::exp(-5.1861 * r)"}
+      - {atomtype1: "^S:", atomtype2: "^O:", equation: "4.8677e6 * Math::exp(-5.1766 * r)", derivative: "-5.1766 * 4.8677e6 * Math::exp(-5.1766 * r)"}
+
+solvent_model: cosmo
+mopac_cosmo_nspa: 122
+
+mopac_setpi_from_file: input.sdf
+mopac_setcharge: { "%atomtype(N:S1H1)": -1 }
+# mopac_setcharge_from_file: input.sdf
+solvent_model: cosmo
+mopac_cosmo_nspa: 122
+

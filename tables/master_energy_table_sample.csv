@@ -1,0 +1,4 @@
+Target,Ligand,GFN2_S_conf,Minus_TS_gfn2_kcal,Delta_gfn2_xtb_kcal,GFN2_crest_xtb_energy,Charge,No_solvent_gfn2_ts,001_protonated_sconf,001_protonated_ts,001_protonated_no_solvent,Delta_gfn2_xtb_protonated,Delta_pm6_on_gfn2
+007-JAK1,4E4L,1.8623488,1.3881482367999998,-2.5997421533801512,-42617.691016106124,0,,,,,,
+007-JAK1,4E4N,4.4854196,3.34331963435,-0.29472488295186006,-45916.544809892424,0,,,,,,
+007-JAK1,4E5W,3.0610544,2.2816334234,-0.8164377317551096,-50943.547454771506,1,,,,,,

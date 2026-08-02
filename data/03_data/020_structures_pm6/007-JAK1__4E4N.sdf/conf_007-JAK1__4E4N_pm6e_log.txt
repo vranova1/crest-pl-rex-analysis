@@ -1,0 +1,14 @@
+        _______  
+       /\______\ 
+      / /      / 
+     / / Cuby /   Geometry optimization
+     \/______/   
+                 
+Molecular charge 0 read from file /home/vranova/Crest-on-PL-REX-dataset/data/02_data/020_structures_sdf/007-JAK1__4E4N.sdf
+Mopac_setpi_from_file read 6 double bonds
+No. of bonds matching the mopac_setpi patterns: 6
+o.O*
+Status: converged in 5 steps
+Energy: -59.120587 kcal/mol
+
+

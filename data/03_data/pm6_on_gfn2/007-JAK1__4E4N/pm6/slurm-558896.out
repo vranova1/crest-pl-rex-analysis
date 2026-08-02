@@ -1,0 +1,10 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+ WARNING - no configuration file found
+
+ Global config file should be located at /home/vranova/programs/cuby4_config.yaml
+ User-specific config is read from ~/.cuby4
+
+ Cuby will run but all the interfaces have to be configured from the input file.
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
