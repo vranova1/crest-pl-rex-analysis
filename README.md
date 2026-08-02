@@ -1,6 +1,3 @@
-# crest-pl-rex-analysis
-Enhancement of Ligand Conformational Free Energy Estimation in the SQM2.20 Scoring Function Using CREST Sampling
-
 # CREST Conformational Analysis Pipeline
 
 This repository contains the scripts used in my bachelor's thesis for conformational sampling, geometry optimization, feature reconstruction, and analysis of the PL-REX dataset.
