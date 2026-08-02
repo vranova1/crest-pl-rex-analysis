@@ -16,7 +16,8 @@ from patsy import dmatrices  # Essential for converting formulas to matrices
 from sklearn.model_selection import LeaveOneGroupOut
 logo = LeaveOneGroupOut()
 
-BASE_PATH = "/home/annav/iocb/Crest-on-PL-REX-dataset"
+# Change to your project root path
+BASE_PATH = "/path/to/crest-pl-rex-analysis"
 TABLES_DIR = os.path.join(BASE_PATH, "tables")
 
 
